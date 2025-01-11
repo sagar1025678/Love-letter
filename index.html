@@ -3,97 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Love Letter</title>
+    <title>Love Letter for Sanju</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe4e1;
+            color: #880e4f;
             margin: 0;
             padding: 0;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-image: url('https://www.transparenttextures.com/patterns/notebook.png');
-            background-size: cover;
-            text-align: center;
         }
-        .container {
-            width: 90%;
+
+        .letter-container {
+            width: 80%;
             max-width: 800px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: none;
         }
-        .love-letter {
-            font-size: 1.2em;
-            line-height: 1.6;
-            white-space: pre-wrap; /* To allow the text to wrap */
-            border-left: 4px solid #333;
-            padding-left: 15px;
-            display: inline-block;
-            font-family: 'Courier New', Courier, monospace;
-            color: #333;
-            width: 100%;
-        }
-        @keyframes typing {
-            0% { width: 0; }
-            100% { width: 100%; }
-        }
-        .typing-effect {
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 4px solid #333;
-            animation: typing 5s steps(60) 1s 1 normal both;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #5cb85c;
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff80ab;
             color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            text-align: center;
+            display: none;
+            z-index: 10;
         }
-        button:hover {
-            background-color: #4cae4c;
+
+        .emoji-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2em;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="love-letter">
-            <div class="typing-effect">
-                My Dearest Sanju,
 
-                I hope this letter finds you in the best of spirits. Words often fall short when I try to express how much you mean to me, but I’ll try my best to convey the depth of my feelings.
+    <div class="popup" id="popup">Welcome my love! 💖</div>
+    <div class="letter-container" id="letter-container"></div>
 
-                From the very first moment we met, something inside me told me that I had found someone truly special. You brought a kind of warmth and light into my life that I never knew I was missing. Every day with you feels like a beautiful new adventure, filled with laughter, understanding, and love.
-
-                Your presence fills my heart with a sense of peace and joy that I cannot put into words. You have a way of making the ordinary feel extraordinary. Whether we are talking, laughing, or simply spending time together, every moment is cherished.
-
-                Sanju, you inspire me to be the best version of myself. Your kindness, intelligence, and strength leave me in awe, and I am incredibly lucky to have you in my life. The way you love and care for those around you is something I deeply admire.
-
-                As I write this letter, I’m filled with nothing but gratitude for having you by my side. I want you to know that I’ll always be here for you, through the good times and the tough ones, just as you have always been there for me.
-
-                With you, my heart feels at home, and I can’t imagine a future without you in it. I love you more than words can express, and I look forward to spending every day with you, growing together in love and happiness.
-
-                Yours always,  
-                [Sagar♡]
-            </div>
-        </div>
-        <button onclick="goBack()">Go Back</button>
-    </div>
+    <div class="emoji-rain" id="emoji-rain"></div>
 
     <script>
-        // Function to go back (you can customize this later)
-        function goBack() {
-            window.history.back(); // Goes to the previous page
+        const letterText = `My Dearest Sanju,\n\nI hope this letter finds you in the best of spirits. Words often fall short when I try to express how much you mean to me, but I’ll try my best to convey the depth of my feelings.\n\nFrom the very first moment we met, something inside me told me that I had found someone truly special. You brought a kind of warmth and light into my life that I never knew I was missing. Every day with you feels like a beautiful new adventure, filled with laughter, understanding, and love.\n\nYour presence fills my heart with a sense of peace and joy that I cannot put into words. You have a way of making the ordinary feel extraordinary. Whether we are talking, laughing, or simply spending time together, every moment is cherished.\n\nSanju, you inspire me to be the best version of myself. Your kindness, intelligence, and strength leave me in awe, and I am incredibly lucky to have you in my life. The way you love and care for those around you is something I deeply admire.\n\nAs I write this letter, I’m filled with nothing but gratitude for having you by my side. I want you to know that I’ll always be here for you, through the good times and the tough ones, just as you have always been there for me.\n\nWith you, my heart feels at home, and I can’t imagine a future without you in it. I love you more than words can express, and I look forward to spending every day with you, growing together in love and happiness.\n\nYours always,\n[Your Name]`;
+
+        const letterContainer = document.getElementById('letter-container');
+        const popup = document.getElementById('popup');
+
+        // Show popup for 3 seconds
+        popup.style.display = 'block';
+        setTimeout(() => {
+            popup.style.display = 'none';
+            showLetter();
+            startEmojiRain();
+        }, 3000);
+
+        function showLetter() {
+            letterContainer.style.display = 'block';
+            let index = 0;
+            function typeLine() {
+                if (index < letterText.length) {
+                    letterContainer.innerHTML += letterText[index] === '\n' ? '<br>' : letterText[index];
+                    index++;
+                    setTimeout(typeLine, 50);
+                }
+            }
+            typeLine();
+        }
+
+        function startEmojiRain() {
+            const emojiRain = document.getElementById('emoji-rain');
+            const emojis = ['💖', '💐', '💋', '💕', '❤️', '🌸'];
+            setInterval(() => {
+                const emoji = document.createElement('div');
+                emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.classList.add('emoji');
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animationDuration = Math.random() * 2 + 3 + 's';
+                emojiRain.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 5000);
+            }, 200);
         }
     </script>
+
 </body>
 </html>
